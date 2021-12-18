@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Laravel\Passport\Bridge\AccessToken;
 use SebastianBergmann\Environment\Console;
 
 class ApiController extends Controller
@@ -21,6 +22,9 @@ class ApiController extends Controller
 
             $user= Auth::user();
 
+            $token['token']=$user->createToken('kayıt')->accessToken;
+
+
             $tokenable_id=DB::table('personal_access_tokens')
             ->join('users','personal_access_tokens.tokenable_id','=',"users.id")
             ->select([
@@ -30,7 +34,6 @@ class ApiController extends Controller
                 'users.id'
             ])->where('personal_access_tokens.tokenable_id',Auth::id())->first();
 
-            $token['token']=$user->createToken('kayıt')->accessToken;
 
 
             return response()->json([

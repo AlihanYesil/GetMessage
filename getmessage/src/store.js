@@ -5,15 +5,31 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state:{
-      login:"http://localhost/api/login",
-      data:"http://localhost/api/data",
-      register:"http://localhost/api/register",
-      user:{
-      token:localStorage.WelcomeToken,
-      tokenId:localStorage.WelcomeId,
+      data:"http://localhost/api",
+      token:"",
+      tokenId:"",
+      isLogin : false
+      
+    },
+    mutations: {
+      setToken (state,token) {
+        state.token=token; 
+      },
+      loginChangeStatus(state,status){
+        if(status){
+          state.isLogin = true
+        }else{
+          state.isLogin = false
+        }
       }
-    }
-  });
+    },
+    getters : {
+      isLogin(state){
+        return state.isLogin
+      }
+   
+   }
+});
 
 
   

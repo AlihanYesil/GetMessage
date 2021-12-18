@@ -43,35 +43,30 @@ export default {
       props: ["header"],
     };
   },
-
-  created: function () {
-    axios({
-      method: "post",
-      url: this.$store.state.data,
-    });
-  },
   methods: {
     login() {
       this.header = false;
       
       
 
-      axios.post(this.$store.state.login, {
+      axios.post(this.$store.state.data+"/login", {
           email: this.input.email,
           password: this.input.password,
         })
         .then((res) => {
          if(res.data.message=="welcome"){
-              localStorage.setItem('WelcomeToken',res.data.success.token)
-              localStorage.setItem('WelcomeId',res.data.success.id)
+              localStorage.setItem('WelcomeToken',res.data.success.token);
+              localStorage.setItem('WelcomeId',res.data.success.id);
+              this.$store.commit("setToken",res.data.success.token);
               this.$router.push("index");
-          
+              this.$store.commit("loginChangeStatus",true)
+
          }
         }).catch(()=>{
             alert("Hesap veya Şifre yanlış");
         });
     },
-  },
+  }
 };
 </script>
 
