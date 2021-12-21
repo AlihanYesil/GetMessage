@@ -144,7 +144,6 @@ export default {
     }).then((res) => {
      
      this.gelenBilgi = res.data;
-      this.$socket.emit("new_user", res.data.name);
     
     });
 
