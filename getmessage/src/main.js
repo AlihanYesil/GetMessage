@@ -4,7 +4,6 @@ import VueRouter from 'vue-router';
 import {routes} from './routes';
 import Vuelidate from 'vuelidate';
 import Vuex from 'vuex';
-import VueSocketIO from 'vue-socket.io';
 
 
 
@@ -12,8 +11,6 @@ Vue.config.productionTip = false
 Vue.use(Vuex);
  Vue.use(VueRouter);
  Vue.use(Vuelidate);
- Vue.use(new VueSocketIO({
-  connection: 'http://localhost:3000'}));
 
  const router =new VueRouter({
   routes:routes,
