@@ -93,7 +93,7 @@ validations :{
 
 methods:{
 submit(){
-    axios.post(this.$store.state.data+"/register",{
+    axios.post(this.$store.state.data+ "/register",{
         email:this.userData.mail,
         password:this.userData.sifre,
         name:this.userData.ad,

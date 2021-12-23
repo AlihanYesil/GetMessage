@@ -8,12 +8,20 @@ export default new Vuex.Store({
       data:"http://localhost/api",
       token:"",
       tokenId:"",
+      name:"",
+      surname:"",
       isLogin : false
       
     },
     mutations: {
       setToken (state,token) {
         state.token=token; 
+      },setId (state,id) {
+        state.tokenId=id; 
+      },setName (state,name) {
+        state.name=name; 
+      },setSurname (state,surname) {
+        state.surname=surname; 
       },
       loginChangeStatus(state,status){
         if(status){

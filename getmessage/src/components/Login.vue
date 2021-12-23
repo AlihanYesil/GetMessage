@@ -49,7 +49,7 @@ export default {
       
       
 
-      axios.post(this.$store.state.data+"/login", {
+      axios.post(this.$store.state.data+ "/login", {
           email: this.input.email,
           password: this.input.password,
         })
@@ -57,10 +57,16 @@ export default {
          if(res.data.message=="welcome"){
               localStorage.setItem('WelcomeToken',res.data.success.token);
               localStorage.setItem('WelcomeId',res.data.success.id);
+              localStorage.setItem('WelcomeName',res.data.success.name);
+              localStorage.setItem('WelcomeSurname',res.data.success.surname);
               this.$store.commit("setToken",res.data.success.token);
+              this.$store.commit("setId",res.data.success.id);
+              this.$store.commit("setName",res.data.success.name);
+              this.$store.commit("setSurname",res.data.success.surname);
               this.$router.push("index");
               this.$store.commit("loginChangeStatus",true)
-
+              
+              
          }
         }).catch(()=>{
             alert("Hesap veya Şifre yanlış");

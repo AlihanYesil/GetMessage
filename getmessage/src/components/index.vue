@@ -15,15 +15,15 @@
             <ul class="list-unstyled chat-list mt-2 mb-0">
               <li
                 class="clearfix"
-                v-for="bilgi in gelenBilgi.data"
-                :key="bilgi.id"
+                v-for="user in users"
+                :key="user.id"
               >
                 <img
                   src="https://bootdey.com/img/Content/avatar/avatar2.png"
                   alt="avatar"
                 />
                 <div class="about">
-                  <div class="name">{{ bilgi.name }} {{ bilgi.surname }}</div>
+                  <div class="name">{{ user.name }}</div>
 
                   <div class="status">
                     <i class="fa fa-circle online"></i>
@@ -75,7 +75,7 @@
 
             <div class="chat-history">
               <ul class="m-b-0">
-                  <li class="clearfix" v-bind:key="Mesaj" v-for="Mesaj in GelenMesaj" v-html="Mesaj">
+                  <li class="clearfix" v-bind:key="Mesajlar" v-for="Mesajlar in GelenMesaj" v-html="Mesajlar" >
                       <div class="message other-message float-left">
                         
                       </div>
@@ -104,7 +104,6 @@
                 <input type="text" class="form-control" v-model="Mesaj"  placeholder="Mesaj" />
                 <div class="input-group-prepend">
                 <input type="submit" class="btn btn-outline-dark" @click="sendMessage" value="Gönder"/>
-                  
                 </div>
               </div>
             </div>
@@ -128,11 +127,40 @@ export default {
       gelenBilgi: [],
       Mesaj: "",
       GelenMesaj: [],
+      users:[],
+      chatControl:false,
     };
-  },
- 
+  },sockets: {
+    users(data) {
+      console.log(data)
+      this.users = data;
+    },
+    messages(data) {
+      this.GelenMesaj = data;}
+    },
   methods: {
-   
+    enterName() {
+      
+    },
+     sendMessage() {
+      this.$socket.emit('new_message', {
+        id: this.$store.state.tokenId,
+        message: this.Mesaj,
+        name : this.$store.state.name
+      });
+      this.Mesaj = "";  
+    },
+    chatController(){
+    
+      
+    },
+    chatUsersLogin(){
+      this.login = true;
+      this.$socket.emit('new_user',{
+          id:this.$store.state.tokenId,
+          name:this.$store.state.name,
+      });
+    }
   },
   computed: {
       
@@ -148,6 +176,9 @@ export default {
     });
 
 
+  },
+  mounted() {
+      this.chatUsersLogin();
   },
 };
 </script>

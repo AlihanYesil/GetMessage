@@ -15,23 +15,35 @@ let users = [];
 let messages = [];
 
 io.on('connection', socket => {
-  socket.on('new_user', (name) => {
-    users.push({
-      id: socket.id,
-      name
-    });
+
+  socket.on('new_user', (gelenveri) => {
+    let hasUser = [];
+    hasUser = users.filter(user => user.id == gelenveri.id);
+    if(hasUser.length == 0){
+      pushUser(gelenveri);
+    }
+    console.log(users);
+    
     io.emit('users', users);
     io.emit('messages', messages);
-  });
-  socket.on('new_message', (message) => {
-    messages.push("<b>" + message.name + ":</b> " + message.message);
-    io.emit('messages', messages);
-  });
-  socket.on('disconnect', () => {
-    const index = users.indexOf(socket.id);
-    users.splice(index, 1);
-    io.emit('users', users);
   });
 
+
+  socket.on('new_message', (message) => {
+    messages.push("<b>" + message.id + ":</b> " + message.message);
+    io.emit('messages', messages);
+  });
+/*   socket.on('disconnect', (id) => {
+    const index = users.indexOf(id);
+    users.splice(index, 1);
+    io.emit('users', users);
+  }); */
+
 });
+const pushUser = function(gelenveri){
+  users.push({
+    id: gelenveri.id,
+    name:gelenveri.name
+  });
+}
 httpServer.listen(3000);

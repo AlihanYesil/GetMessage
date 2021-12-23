@@ -31,6 +31,8 @@ class ApiController extends Controller
                 'personal_access_tokens.tokenable_id',
                 'personal_access_tokens.token',
                 'users.email',
+                'users.name',
+                'users.surname',
                 'users.id'
             ])->where('personal_access_tokens.tokenable_id',Auth::id())->first();
 

@@ -29,7 +29,13 @@ export default{
   methods: {
     deleteToken(){
       this.$store.commit("setToken","");
+      this.$store.commit("setId","");
+      this.$store.commit("setName","");
+      this.$store.commit("setSurname","");
       localStorage.removeItem("WelcomeToken");
+      localStorage.removeItem("WelcomeId");
+      localStorage.removeItem("WelcomeName");
+      localStorage.removeItem("WelcomeSurname");
       this.$store.commit("loginChangeStatus",false)
     }
   },

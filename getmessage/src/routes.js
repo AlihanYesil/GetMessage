@@ -37,8 +37,12 @@ const index = resolve => {
 const loginMiddleware = function () {
     if (localStorage.WelcomeToken) {
         store.commit("setToken", localStorage.WelcomeToken);
+        store.commit("setId", localStorage.WelcomeId);
+        store.commit("setName", localStorage.WelcomeName);
+        store.commit("setSurname", localStorage.WelcomeSurname);
         store.commit("loginChangeStatus", true);
     }
+    
     return store.getters.isLogin
 
 }
