@@ -30,14 +30,14 @@ io.on('connection', socket => {
 
 
   socket.on('new_message', (message) => {
-    messages.push("<b>" + message.id + ":</b> " + message.message);
+    messages.push( {key:message.id,mesaj:message.message});
     io.emit('messages', messages);
   });
-/*   socket.on('disconnect', (id) => {
+  socket.on('disconnect', (id) => {
     const index = users.indexOf(id);
     users.splice(index, 1);
     io.emit('users', users);
-  }); */
+  });   
 
 });
 const pushUser = function(gelenveri){

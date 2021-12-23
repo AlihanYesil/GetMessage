@@ -75,9 +75,12 @@
 
             <div class="chat-history">
               <ul class="m-b-0">
-                  <li class="clearfix" v-bind:key="Mesajlar" v-for="Mesajlar in GelenMesaj" v-html="Mesajlar" >
-                      <div class="message other-message float-left">
-                        
+                  <li class="clearfix" :key="Mesajlar.key" v-for="Mesajlar in GelenMesaj" >
+                    <div class="message my-message float-left" v-if="chatControl">
+                        {{Mesajlar.mesaj}}
+                      </div>
+                      <div class="message other-message float-left" v-if="!chatControl">
+                        {{Mesajlar.mesaj}}
                       </div>
                   </li>
 
@@ -128,7 +131,7 @@ export default {
       Mesaj: "",
       GelenMesaj: [],
       users:[],
-      chatControl:false,
+      chatControl:true,
     };
   },sockets: {
     users(data) {
@@ -151,7 +154,9 @@ export default {
       this.Mesaj = "";  
     },
     chatController(){
-    
+    if(this.Mesajlar.id == this.$store.state.tokenId){
+      this.chatController=false;
+    }
       
     },
     chatUsersLogin(){
