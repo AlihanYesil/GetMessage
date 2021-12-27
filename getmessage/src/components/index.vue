@@ -12,7 +12,7 @@
               </div>
               <input type="text" class="form-control" placeholder="Search..." />
             </div>
-            <ul class="list-unstyled chat-list mt-2 mb-0">
+            <ul class="list-unstyled chat-list mt-2 mb-0 my_scroll_div">
               <li
                 class="clearfix"
                 v-for="user in users"
@@ -32,18 +32,7 @@
                 </div>
               </li>
 
-              <li class="clearfix">
-                <img
-                  src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                  alt="avatar"
-                />
-                <div class="about">
-                  <div class="name">Mike Thomas</div>
-                  <div class="status">
-                    <i class="fa fa-circle online"></i> online
-                  </div>
-                </div>
-              </li>
+              
             </ul>
           </div>
           <div class="chat">
@@ -73,29 +62,15 @@
               </div>
             </div>
 
-            <div class="chat-history">
+            <div class="chat-history  my_scroll_div"   >
               <ul class="m-b-0">
-                  <li class="clearfix" :key="Mesajlar.key" v-for="Mesajlar in GelenMesaj" >
-                    <div class="message my-message float-left" v-if="chatControl">
+                  <li class="clearfix" :key="index" v-for="(Mesajlar,index) in GelenMesaj" >
+                    <div class="message  " :class="[ chatController(Mesajlar) ? 'float-right my-message' : 'float-left   other-message' ]">
                         {{Mesajlar.mesaj}}
                       </div>
-                      <div class="message other-message float-left" v-if="!chatControl">
-                        {{Mesajlar.mesaj}}
-                      </div>
+                      
                   </li>
 
-                <li class="clearfix">
-                  <div class="message other-message float-left">
-                    Hi Aiden, how are you? How is the project coming along?
-                  </div>
-                </li>
-
-                <li class="clearfix">
-                  <div class="message my-message float-right">
-                    Project has been already finished and I have results to show
-                    you.
-                  </div>
-                </li>
 
 
               </ul>
@@ -104,7 +79,7 @@
             <div class="chat-message clearfix">
               <div class="input-group mb-0">
                
-                <input type="text" class="form-control" v-model="Mesaj"  placeholder="Mesaj" />
+                <input type="text" class="form-control" v-model="Mesaj" v-on:keydown.enter="sendMessage" placeholder="Mesaj" />
                 <div class="input-group-prepend">
                 <input type="submit" class="btn btn-outline-dark" @click="sendMessage" value="Gönder"/>
                 </div>
@@ -131,11 +106,10 @@ export default {
       Mesaj: "",
       GelenMesaj: [],
       users:[],
-      chatControl:true,
     };
-  },sockets: {
+  },
+  sockets: {
     users(data) {
-      console.log(data)
       this.users = data;
     },
     messages(data) {
@@ -153,11 +127,12 @@ export default {
       });
       this.Mesaj = "";  
     },
-    chatController(){
-    if(this.Mesajlar.id == this.$store.state.tokenId){
-      this.chatController=false;
-    }
-      
+    chatController(mesaj){
+        if( mesaj.key  == this.$store.state.tokenId){
+          return true;
+        }else{
+          return false;
+        }
     },
     chatUsersLogin(){
       this.login = true;
@@ -185,6 +160,7 @@ export default {
   mounted() {
       this.chatUsersLogin();
   },
+  
 };
 </script>
 
@@ -224,7 +200,10 @@ body {
   margin-left: 280px;
   border-left: 1px solid #eaeaea;
 }
-
+.my_scroll_div{
+    overflow-y: auto;
+    max-height: 500px;
+}
 .people-list {
   -moz-transition: 0.5s;
   -o-transition: 0.5s;
@@ -325,11 +304,11 @@ body {
 }
 
 .chat .chat-history .my-message {
-  background: #e3e3e3;
+  background: #8cedca;
 }
 
 .chat .chat-history .other-message {
-  background: #8cedca;
+  background: #e3e3e3;
   text-align: right;
 }
 

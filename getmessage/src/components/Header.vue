@@ -37,6 +37,7 @@ export default{
       localStorage.removeItem("WelcomeName");
       localStorage.removeItem("WelcomeSurname");
       this.$store.commit("loginChangeStatus",false)
+      this.$socket.emit("cikis",this.$store.state.tokenId)
     }
   },
   computed: {

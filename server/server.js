@@ -3,6 +3,7 @@ const {Server} = require("socket.io");
 
 
 
+
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
@@ -33,11 +34,11 @@ io.on('connection', socket => {
     messages.push( {key:message.id,mesaj:message.message});
     io.emit('messages', messages);
   });
-  socket.on('disconnect', (id) => {
+  socket.on('cikis', (id) => {
     const index = users.indexOf(id);
     users.splice(index, 1);
     io.emit('users', users);
-  });   
+  });    
 
 });
 const pushUser = function(gelenveri){
