@@ -1,9 +1,6 @@
 const {createServer} = require("http");
 const {Server} = require("socket.io");
 
-
-
-
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
@@ -11,6 +8,9 @@ const io = new Server(httpServer, {
         methods: ["GET", "POST"]
       }
 });
+
+
+
 
 let users = [];
 let messages = [];
@@ -23,7 +23,6 @@ io.on('connection', socket => {
     if(hasUser.length == 0){
       pushUser(gelenveri);
     }
-    console.log(users);
     
     io.emit('users', users);
     io.emit('messages', messages);
@@ -44,7 +43,8 @@ io.on('connection', socket => {
 const pushUser = function(gelenveri){
   users.push({
     id: gelenveri.id,
-    name:gelenveri.name
+    name:gelenveri.name,
+    surname:gelenveri.surname
   });
 }
 httpServer.listen(3000);

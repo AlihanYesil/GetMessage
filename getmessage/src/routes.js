@@ -34,6 +34,7 @@ const index = resolve => {
 
 
 
+
 const loginMiddleware = function () {
     if (localStorage.WelcomeToken) {
         store.commit("setToken", localStorage.WelcomeToken);
@@ -70,6 +71,7 @@ export const routes = [
         }
     },
 
+    
 
     {
         path: '/profil', name: 'profil', component: profil,
@@ -98,6 +100,7 @@ export const routes = [
 
         }
     },
+   
 
 
 

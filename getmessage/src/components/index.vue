@@ -3,6 +3,8 @@
     <div class="row clearfix">
       <div class="col-lg-12">
         <div class="card chat-app">
+
+
           <div id="plist" class="people-list">
             <div class="input-group">
               <div class="input-group-prepend">
@@ -12,29 +14,32 @@
               </div>
               <input type="text" class="form-control" placeholder="Search..." />
             </div>
+            
             <ul class="list-unstyled chat-list mt-2 mb-0 my_scroll_div">
-              <li
+              <router-link tag="li"
                 class="clearfix"
                 v-for="user in users"
                 :key="user.id"
+                :to="'/index/'+ user.id "
               >
                 <img
-                  src="https://bootdey.com/img/Content/avatar/avatar2.png"
+                  :src="'https://ui-avatars.com/api/?name='+user.name+user.surname"
                   alt="avatar"
                 />
                 <div class="about">
-                  <div class="name">{{ user.name }}</div>
+                  <a class="name" style="text-decoration:none;">{{ user.name }} {{user.surname}}</a>
 
-                  <div class="status">
-                    <i class="fa fa-circle online"></i>
+                  <div class="status" >
+                    <i class="fa fa-circle online"  ></i>
                     online
                   </div>
                 </div>
-              </li>
-
-              
+              </router-link>
             </ul>
+
           </div>
+
+
           <div class="chat">
             <div class="chat-header clearfix">
               <div class="row">
@@ -45,7 +50,7 @@
                     data-target="#view_info"
                   >
                     <img
-                      src="https://bootdey.com/img/Content/avatar/avatar2.png"
+                      src="https://ui-avatars.com/api/?name=Alihan+yesil"
                       alt="avatar"
                     />
                   </a>
@@ -62,9 +67,9 @@
               </div>
             </div>
 
-            <div class="chat-history  my_scroll_div"   >
+            <div  class="chat-history  my_scroll_div" ref="msgContainer">
               <ul class="m-b-0">
-                  <li class="clearfix" :key="index" v-for="(Mesajlar,index) in GelenMesaj" >
+                  <li id="chat-history" class="clearfix" :key="index" v-for="(Mesajlar,index) in GelenMesaj" >
                     <div class="message  " :class="[ chatController(Mesajlar) ? 'float-right my-message' : 'float-left   other-message' ]">
                         {{Mesajlar.mesaj}}
                       </div>
@@ -86,6 +91,8 @@
               </div>
             </div>
           </div>
+
+
         </div>
       </div>
     </div>
@@ -120,13 +127,16 @@ export default {
       
     },
      sendMessage() {
-      this.$socket.emit('new_message', {
+       if(this.Mesaj!==""){
+          this.$socket.emit('new_message', {
         id: this.$store.state.tokenId,
         message: this.Mesaj,
         name : this.$store.state.name
       });
       this.Mesaj = "";  
-    },
+    }
+       },
+      
     chatController(mesaj){
         if( mesaj.key  == this.$store.state.tokenId){
           return true;
@@ -139,6 +149,7 @@ export default {
       this.$socket.emit('new_user',{
           id:this.$store.state.tokenId,
           name:this.$store.state.name,
+          surname:this.$store.state.surname
       });
     }
   },
@@ -160,6 +171,14 @@ export default {
   mounted() {
       this.chatUsersLogin();
   },
+  watch: {
+    GelenMesaj: function() {
+      this.$nextTick(function() {
+        var container = this.$refs.msgContainer;
+        container.scrollTop = container.scrollHeight + 120;
+      });
+    }
+  }
   
 };
 </script>
@@ -269,6 +288,7 @@ body {
 .chat .chat-history {
   padding: 20px;
   border-bottom: 2px solid #fff;
+  height: 500px;
 }
 
 .chat .chat-history ul {
@@ -305,11 +325,13 @@ body {
 
 .chat .chat-history .my-message {
   background: #8cedca;
+  max-width: 300px;
 }
 
 .chat .chat-history .other-message {
   background: #e3e3e3;
-  text-align: right;
+  max-width: 300px;
+
 }
 
 .chat .chat-message {
