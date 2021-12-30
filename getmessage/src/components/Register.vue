@@ -6,11 +6,13 @@
       class="form-control"
       name="name"
       @input="userData.ad = $event.target.value"
+      @blur="$v.userData.ad.$touch()"
       v-model="userData.ad"
       placeholder="Ad"
     />
      <small v-if="!$v.userData.ad.required" class="text text-danger">bu alan zorunludur.. </small>
-
+     <small v-if="!$v.userData.ad.alpha" class="text text-danger">Lütfen Türkçe karakter girmeyiniz.. </small>
+    
     <input
       type="text"
       name="surname"
@@ -21,7 +23,7 @@
       placeholder="Soyad"
     />
      <small v-if="!$v.userData.soyad.required" class="text text-danger">bu alan zorunludur.. </small>
-     <small v-if="!$v.userData.soyad.alpha" class="text text-danger">bu alan zorunludur.. </small>
+     <small v-if="!$v.userData.soyad.alpha" class="text text-danger">Lütfen Türkçe karakter girmeyiniz.. </small>
 
     <input
       type="email"
@@ -85,7 +87,7 @@ validations :{
     },
   soyad:{
       required,
-      alpha
+      alpha,
     },
 
   }

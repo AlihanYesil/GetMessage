@@ -5,7 +5,7 @@
         <div class="card chat-app">
 
 
-          <div id="plist" class="people-list">
+          <div v-if="!this.room" id="plist" class="people-list">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"
@@ -14,74 +14,76 @@
               </div>
               <input type="text" class="form-control" placeholder="Search..." />
             </div>
-            
+              
             <ul class="list-unstyled chat-list mt-2 mb-0 my_scroll_div">
-              <router-link tag="li"
+              <template v-for="user in users" >
+              <li
                 class="clearfix"
-                v-for="user in users"
+                v-if="$store.state.tokenId!==user.id"
+                
                 :key="user.id"
-                :to="'/index/'+ user.id "
-              >
+                @click="enterRoom(user.socketId)"
+                >
                 <img
                   :src="'https://ui-avatars.com/api/?name='+user.name+user.surname"
                   alt="avatar"
                 />
                 <div class="about">
-                  <a class="name" style="text-decoration:none;">{{ user.name }} {{user.surname}}</a>
-
+                  <a class="name" style="text-decoration:none;" >
+                    
+                    {{ user.name }} {{user.surname}}
+                    </a>
+                  
                   <div class="status" >
                     <i class="fa fa-circle online"  ></i>
                     online
                   </div>
                 </div>
-              </router-link>
+              </li>
+              </template>
             </ul>
-
           </div>
+           
 
-
-          <div class="chat">
-            <div class="chat-header clearfix">
-              <div class="row">
-                <div class="col-lg-6">
-                  <a
-                    href="javascript:void(0);"
-                    data-toggle="modal"
-                    data-target="#view_info"
-                  >
-                    <img
-                      src="https://ui-avatars.com/api/?name=Alihan+yesil"
-                      alt="avatar"
-                    />
+          <div class="chat" >
+            <div class=" chat-header clearfix" v-if="this.room">
+              <div @keyup.esc="deleteRoom('')" class="row">
+                 <div    class="col-lg-2 hidden-sm text-left">
+                  <a href="javascript:void(0);" class="btn btn-outline-dark"  @click="deleteRoom('') "><i class="fa fa-arrow-left"></i></a>
+                </div>
+                <div class=" col-lg-6">
+                  <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info" >
+                    <img src="https://ui-avatars.com/api/?name=Alihan+yesil" alt="avatar"/>
                   </a>
                   <div class="chat-about">
-                    <h6 class="m-b-0">Aiden Chavez</h6>
-                    <small>Last seen: 2 hours ago</small>
+                    <h6 class="m-b-0">Alihan Yesil</h6>
+                    <small>Last seen: </small>
                   </div>
                 </div>
-                <div class="col-lg-6 hidden-sm text-right">
-                  <a href="javascript:void(0);" class="btn btn-outline-warning"
-                    ><i class="fa fa-question"></i
-                  ></a>
-                </div>
+               
               </div>
             </div>
 
             <div  class="chat-history  my_scroll_div" ref="msgContainer">
-              <ul class="m-b-0">
+              <ul class="m-b-0" v-if="this.room">
                   <li id="chat-history" class="clearfix" :key="index" v-for="(Mesajlar,index) in GelenMesaj" >
                     <div class="message  " :class="[ chatController(Mesajlar) ? 'float-right my-message' : 'float-left   other-message' ]">
                         {{Mesajlar.mesaj}}
-                      </div>
+                          <br>
+                        <small>{{Mesajlar.time}}</small>
+                        </div>
                       
                   </li>
 
 
 
               </ul>
+              <template v-else>
+                  Konuşmak için soldan arkadaş seçiniz!!
+              </template>
             </div>
 
-            <div class="chat-message clearfix">
+            <div class="chat-message clearfix" v-if="this.room">
               <div class="input-group mb-0">
                
                 <input type="text" class="form-control" v-model="Mesaj" v-on:keydown.enter="sendMessage" placeholder="Mesaj" />
@@ -113,25 +115,37 @@ export default {
       Mesaj: "",
       GelenMesaj: [],
       users:[],
+      room:"",
     };
   },
   sockets: {
     users(data) {
+      console.log(data);
       this.users = data;
     },
     messages(data) {
-      this.GelenMesaj = data;}
+      this.GelenMesaj = data;
+      }
     },
   methods: {
-    enterName() {
-      
+    enterRoom(ID) {
+      this.room=ID;
+      this.$socket.emit("room",this.room);
+    },
+    deleteRoom(ID){
+      this.room=ID;
+      this.$socket.emit("disconnecting",this.room);
+
     },
      sendMessage() {
-       if(this.Mesaj!==""){
+      let z = new Date()
+       if(this.Mesaj!=="" && this.room !==""){
           this.$socket.emit('new_message', {
         id: this.$store.state.tokenId,
         message: this.Mesaj,
-        name : this.$store.state.name
+        name : this.$store.state.name,
+        room:this.room,
+        time:z.getHours()+':'+z.getMinutes(),
       });
       this.Mesaj = "";  
     }
@@ -177,7 +191,14 @@ export default {
         var container = this.$refs.msgContainer;
         container.scrollTop = container.scrollHeight + 120;
       });
-    }
+    },
+    room: function() {
+      this.$nextTick(function() {
+        var container = this.$refs.msgContainer;
+        container.scrollTop = container.scrollHeight + 120;
+      });
+    },
+
   }
   
 };
