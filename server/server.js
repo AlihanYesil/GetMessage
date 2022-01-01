@@ -30,39 +30,29 @@ io.on('connection', socket => {
     }
     io.emit('users', users);
   });
-
-  
-
- 
   
   socket.on("room",(room)=>{
-
     io.emit('users', users);
-
-    /* socket.join(room);
-    console.log('user bağlandı :'+ room);
-
-    socket.on("roomleave",(bosroom)=>{
-      socket.leave(room)
-      console.log('odadan çıktı :'+room);
-    }); */
-
-    socket.on('new_message', (message) => {
-      messages.push({key:message.id,mesaj:message.message,time:message.time,room:message.room});
-      console.log('mesaj bu room a gitti :' + room);
-      io.to([room,socket.id]).emit('messages',messages);
-
-      socket.on("roomleave",(id)=>{
-        socket.leave([id,message.room,socket.id]);
-        console.log("odadan çıkış yapıtı:" + message.room );
-      });
-      
-    });
-
-
+    socket.leaveAll();
+    socket.join(socket.id);
+    
+    
   });
 
+  socket.on('new_message', (message) => {
+    messages.push({key:message.id,mesaj:message.message,time:message.time,room:message.room,gndrnSocketId:socket.id});
+    console.log('mesaj bu room a gitti :' + message.room);
 
+    let mesaj=messages.filter(messager => messager.room == message.room && messager.gndrnSocketId==socket.id || messager.room == socket.id && messager.gndrnSocketId==message.room); 
+    //ROOM DEĞİŞTİĞİNDE DEĞİŞMESİ LAZIM
+    console.log(mesaj);
+
+    io.to([message.room,socket.id]).emit('messages',mesaj);
+
+    
+  });
+
+  
  
 
   socket.on('cikis', (id) => {

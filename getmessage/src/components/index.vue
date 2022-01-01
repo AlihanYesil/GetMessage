@@ -5,37 +5,30 @@
         <div class="card chat-app">
 
 
-          <div v-if="!this.room" id="plist" class="people-list">
-            <div class="input-group">
+          <div  id="plist" class="people-list">
+            <!-- <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text"
-                  ><i class="fa fa-search"></i
-                ></span>
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
               </div>
               <input type="text" class="form-control" placeholder="Search..." />
-            </div>
+            </div>  -->
               
             <ul class="list-unstyled chat-list mt-2 mb-0 my_scroll_div">
               <template v-for="user in users" >
               <li
                 class="clearfix"
                 v-if="$store.state.tokenId!==user.id"
-                
+                :class="[(room==user.socketId) ? 'active': '']"
                 :key="user.id"
-                @click="enterRoom(user.socketId)"
-                >
-                <img
-                  :src="'https://ui-avatars.com/api/?name='+user.name+user.surname"
-                  alt="avatar"
-                />
+                @click="enterRoom({socketId:user.socketId,name:user.name,surname:user.surname})">
+                <img :src="'https://ui-avatars.com/api/?name='+user.name+user.surname" alt="avatar" />
                 <div class="about">
                   <a class="name" style="text-decoration:none;" >
-                    
                     {{ user.name }} {{user.surname}}
                     </a>
                   
                   <div class="status" >
-                    <i class="fa fa-circle online"  ></i>
+                    <i class="fa fa-circle online"></i>
                     online
                   </div>
                 </div>
@@ -46,26 +39,25 @@
            
 
           <div class="chat" >
-            <div class=" chat-header clearfix" v-if="this.room">
-              <div @keyup.esc="deleteRoom('')" class="row">
-                 <div    class="col-lg-2 hidden-sm text-left">
-                  <a href="javascript:void(0);" class="btn btn-outline-dark"  @click="deleteRoom('') "><i class="fa fa-arrow-left"></i></a>
-                </div>
+            <div class=" chat-header clearfix" >
+              <div class="row">
+                 
                 <div class=" col-lg-6">
                   <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info" >
-                    <img src="https://ui-avatars.com/api/?name=Alihan+yesil" alt="avatar"/>
+                    <img :src="'https://ui-avatars.com/api/?name='+this.chatUser" alt="avatar"/>
                   </a>
                   <div class="chat-about">
-                    <h6 class="m-b-0">Alihan Yesil</h6>
+                    <h6 class="m-b-0">{{this.chatUser}}</h6>
                     <small>Last seen: </small>
                   </div>
                 </div>
+               
                
               </div>
             </div>
 
             <div  class="chat-history  my_scroll_div" ref="msgContainer">
-              <ul class="m-b-0" v-if="this.room">
+              <ul class="m-b-0" >
                   <li id="chat-history" class="clearfix" :key="index" v-for="(Mesajlar,index) in GelenMesaj" >
                     <div class="message  " :class="[ chatController(Mesajlar) ? 'float-right my-message' : 'float-left   other-message' ]">
                         {{Mesajlar.mesaj}}
@@ -78,12 +70,12 @@
 
 
               </ul>
-              <template v-else>
-                  Konuşmak için soldan arkadaş seçiniz!!
-              </template>
+             
             </div>
-
-            <div class="chat-message clearfix" v-if="this.room">
+                  <template v-if="!this.room">
+                    <p>Kullanıcı Seçmedin!!</p>
+                      </template>
+            <div class="chat-message clearfix" >
               <div class="input-group mb-0">
                
                 <input type="text" class="form-control" v-model="Mesaj" v-on:keydown.enter="sendMessage" placeholder="Mesaj" />
@@ -116,11 +108,11 @@ export default {
       GelenMesaj: [],
       users:[],
       room:"",
+      chatUser:"",
     };
   },
   sockets: {
     users(data) {
-      console.log(data);
       this.users = data;
     },
     messages(data) {
@@ -129,12 +121,13 @@ export default {
     },
   methods: {
     enterRoom(ID) {
-      this.room=ID;
+      this.room=ID.socketId;
       this.$socket.emit("room",this.room);
+      this.chatUser=ID.name+" "+ID.surname;
     },
     deleteRoom(ID){
       this.room=ID;
-      this.$socket.emit("disconnecting",this.room);
+      this.$socket.emit("roomleave",this.room);
 
     },
      sendMessage() {
@@ -149,6 +142,7 @@ export default {
       });
       this.Mesaj = "";  
     }
+    
        },
       
     chatController(mesaj){
