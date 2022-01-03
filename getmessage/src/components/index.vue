@@ -48,7 +48,7 @@
                   </a>
                   <div class="chat-about">
                     <h6 class="m-b-0">{{this.chatUser}}</h6>
-                    <small>Last seen: </small>
+                    <small v-if="this.room">Last seen: </small>
                   </div>
                 </div>
                
@@ -73,7 +73,7 @@
              
             </div>
                   <template v-if="!this.room">
-                    <p>Kullanıcı Seçmedin!!</p>
+                    <p class="text-danger">Kullanıcı Seçmedin!!</p>
                       </template>
             <div class="chat-message clearfix" >
               <div class="input-group mb-0">

@@ -1,7 +1,9 @@
 const {createServer} = require("http");
 const { join } = require("path");
 const {Server, Socket} = require("socket.io");
-
+const express = require('express');
+const app = express();
+const axios = require("axios").create({baseUrl: 'http://localhost/api'});
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
@@ -16,6 +18,9 @@ const io = new Server(httpServer, {
 let users = [];
 let messages = [];
 let hasUser = [];
+
+
+
 
 io.on('connection', socket => {
  let SOCKETID = socket.id
@@ -36,6 +41,9 @@ io.on('connection', socket => {
     socket.leaveAll();
     socket.join(socket.id);
     
+
+    let mesaj=messages.filter(messager => messager.room ==room && messager.gndrnSocketId==socket.id || messager.room==socket.id && messager.gndrnSocketId==room);
+    io.to([room,socket.id]).emit('messages',mesaj);
     
   });
 
@@ -45,7 +53,6 @@ io.on('connection', socket => {
 
     let mesaj=messages.filter(messager => messager.room == message.room && messager.gndrnSocketId==socket.id || messager.room == socket.id && messager.gndrnSocketId==message.room); 
     //ROOM DEĞİŞTİĞİNDE DEĞİŞMESİ LAZIM
-    console.log(mesaj);
 
     io.to([message.room,socket.id]).emit('messages',mesaj);
 
