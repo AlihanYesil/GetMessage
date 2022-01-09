@@ -1,9 +1,6 @@
 const {createServer} = require("http");
 const { join } = require("path");
 const {Server, Socket} = require("socket.io");
-const express = require('express');
-const app = express();
-const axios = require("axios").create({baseUrl: 'http://localhost/api'});
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
@@ -29,7 +26,7 @@ io.on('connection', socket => {
 
     hasUser = users.filter(user => user.id == gelenveri.id);
     if(hasUser.length == 0){
-
+      socket.join(gelenveri.id)
       gelenveri.socketId=SOCKETID;
       pushUser(gelenveri);
     }
@@ -39,22 +36,22 @@ io.on('connection', socket => {
   socket.on("room",(room)=>{
     io.emit('users', users);
     socket.leaveAll();
-    socket.join(socket.id);
+    socket.join(room.gndrnId);
     
 
-    let mesaj=messages.filter(messager => messager.room ==room && messager.gndrnSocketId==socket.id || messager.room==socket.id && messager.gndrnSocketId==room);
-    io.to([room,socket.id]).emit('messages',mesaj);
+    let mesaj=messages.filter(messager => messager.room ==room.aliciId && messager.gndrnId==room.gndrnId || messager.room==room.gndrnId && messager.gndrnId==room.aliciId);
+    io.to([room.aliciId,room.gndrnId]).emit('messages',mesaj);
     
   });
 
   socket.on('new_message', (message) => {
-    messages.push({key:message.id,mesaj:message.message,time:message.time,room:message.room,gndrnSocketId:socket.id});
+    messages.push({gndrnId:message.id,mesaj:message.message,time:message.time,room:message.room,gndrnSocketId:socket.id});
     console.log('mesaj bu room a gitti :' + message.room);
 
-    let mesaj=messages.filter(messager => messager.room == message.room && messager.gndrnSocketId==socket.id || messager.room == socket.id && messager.gndrnSocketId==message.room); 
+    let mesaj=messages.filter(messager => messager.room == message.room && messager.gndrnId==message.id || messager.room == message.id && messager.gndrnId==message.room); 
     //ROOM DEĞİŞTİĞİNDE DEĞİŞMESİ LAZIM
 
-    io.to([message.room,socket.id]).emit('messages',mesaj);
+    io.to([message.room,message.id]).emit('messages',mesaj);
 
     
   });

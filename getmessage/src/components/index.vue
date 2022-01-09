@@ -1,6 +1,18 @@
 <template>
+
   <div class="container">
+    
     <div class="row clearfix">
+   <div class="container float-right" style="width:400px; ">
+      <div class="card">
+        <div class="card-header">
+          <span> </span>
+        </div>
+        <div class="card-body" >
+
+        </div>
+      </div>
+    </div>  
       <div class="col-lg-12">
         <div class="card chat-app">
 
@@ -18,9 +30,9 @@
               <li
                 class="clearfix"
                 v-if="$store.state.tokenId!==user.id"
-                :class="[(room==user.socketId) ? 'active': '']"
+                :class="[(room==user.id) ? 'active': '']"
                 :key="user.id"
-                @click="enterRoom({socketId:user.socketId,name:user.name,surname:user.surname})">
+                @click="enterRoom({aliciId:user.id,socketId:user.socketId,name:user.name,surname:user.surname})">
                 <img :src="'https://ui-avatars.com/api/?name='+user.name+user.surname" alt="avatar" />
                 <div class="about">
                   <a class="name" style="text-decoration:none;" >
@@ -60,11 +72,10 @@
               <ul class="m-b-0" >
                   <li id="chat-history" class="clearfix" :key="index" v-for="(Mesajlar,index) in GelenMesaj" >
                     <div class="message  " :class="[ chatController(Mesajlar) ? 'float-right my-message' : 'float-left   other-message' ]">
-                        {{Mesajlar.mesaj}}
+                       <span v-html="[this.room==Mesajlar.room] ? Mesajlar.mesaj  : ''"></span>
                           <br>
                         <small>{{Mesajlar.time}}</small>
-                        </div>
-                      
+                       </div>
                   </li>
 
 
@@ -90,9 +101,13 @@
         </div>
       </div>
     </div>
-  </div>
-</template>
+   
 
+  </div>
+
+  
+    
+</template>
 
 
 
@@ -121,15 +136,14 @@ export default {
     },
   methods: {
     enterRoom(ID) {
-      this.room=ID.socketId;
-      this.$socket.emit("room",this.room);
+      this.room=ID.aliciId;
+      this.$socket.emit("room",{
+        aliciId:this.room,
+        gndrnId:this.$store.state.tokenId,
+        });
       this.chatUser=ID.name+" "+ID.surname;
     },
-    deleteRoom(ID){
-      this.room=ID;
-      this.$socket.emit("roomleave",this.room);
-
-    },
+    
      sendMessage() {
       let z = new Date()
        if(this.Mesaj!=="" && this.room !==""){
@@ -146,7 +160,8 @@ export default {
        },
       
     chatController(mesaj){
-        if( mesaj.key  == this.$store.state.tokenId){
+       
+        if( mesaj.gndrnId  == this.$store.state.tokenId){
           return true;
         }else{
           return false;
@@ -161,9 +176,7 @@ export default {
       });
     }
   },
-  computed: {
-      
-  },
+  
   created: function () {
     axios({
       method: "post",
