@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state:{
-      data:"http://localhost/api",
+      data:"http://192.168.137.232/api",
       token:"",
       tokenId:"",
       name:"",

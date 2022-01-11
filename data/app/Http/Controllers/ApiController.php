@@ -80,14 +80,17 @@ class ApiController extends Controller
 
 
 
-    public function logout(){
-
+    public function mesaj(Request $request){
+       DB::table('users')->where('id',$request->key)->first()
+       ->update([
+           'mesaj'=> $request->mesaj
+    ]);
     }
 
 
     public function data(){
-        $data = DB::table('users')->get()->all();
 
+        $data = DB::table('users')->get()->all();
         return response()->json([
             'data'=>$data
         ]);

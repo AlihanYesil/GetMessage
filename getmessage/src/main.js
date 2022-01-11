@@ -8,7 +8,7 @@ import VueSocketIO from 'vue-socket.io';
 import SocketIO from 'socket.io-client';
 
 
-const socketConnection = SocketIO('http://localhost:3000');
+const socketConnection = SocketIO('http://192.168.137.232:3000');
 
 Vue.config.productionTip = false
 Vue.use(Vuex);

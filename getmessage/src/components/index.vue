@@ -6,7 +6,8 @@
    <div class="container float-right" style="width:400px; ">
       <div class="card">
         <div class="card-header">
-          <span> </span>
+          
+          <span> {{this.$store.state.name}} {{this.$store.state.surname}}</span>
         </div>
         <div class="card-body" >
 
@@ -131,9 +132,10 @@ export default {
       this.users = data;
     },
     messages(data) {
-      this.GelenMesaj = data;
+      let GelenMesajlar = data.filter(GelenMesajlar => this.room==GelenMesajlar.room && this.$store.state.tokenId==GelenMesajlar.gndrnId || this.room==GelenMesajlar.gndrnId && this.$store.state.tokenId==GelenMesajlar.room)
+      this.GelenMesaj = GelenMesajlar;
       }
-    },
+  },
   methods: {
     enterRoom(ID) {
       this.room=ID.aliciId;

@@ -4,7 +4,7 @@ const {Server, Socket} = require("socket.io");
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: "http://192.168.137.232:8080",
         methods: ["GET", "POST"]
       }
 });
@@ -18,8 +18,8 @@ let hasUser = [];
 
 
 
-
 io.on('connection', socket => {
+
  let SOCKETID = socket.id
 
   socket.on('new_user', (gelenveri) => {
@@ -33,14 +33,14 @@ io.on('connection', socket => {
     io.emit('users', users);
   });
   
+  io.emit('users', users);
+
   socket.on("room",(room)=>{
     io.emit('users', users);
     socket.leaveAll();
     socket.join(room.gndrnId);
-    
 
-    let mesaj=messages.filter(messager => messager.room ==room.aliciId && messager.gndrnId==room.gndrnId || messager.room==room.gndrnId && messager.gndrnId==room.aliciId);
-    io.to([room.aliciId,room.gndrnId]).emit('messages',mesaj);
+    io.to([room.aliciId,room.gndrnId]).emit('messages',messages);
     
   });
 
@@ -48,10 +48,9 @@ io.on('connection', socket => {
     messages.push({gndrnId:message.id,mesaj:message.message,time:message.time,room:message.room,gndrnSocketId:socket.id});
     console.log('mesaj bu room a gitti :' + message.room);
 
-    let mesaj=messages.filter(messager => messager.room == message.room && messager.gndrnId==message.id || messager.room == message.id && messager.gndrnId==message.room); 
-    //ROOM DEĞİŞTİĞİNDE DEĞİŞMESİ LAZIM
-
-    io.to([message.room,message.id]).emit('messages',mesaj);
+    io.to([message.room,message.id]).emit('messages',messages);
+      
+    
 
     
   });
@@ -75,4 +74,4 @@ let pushUser = function(gelenveri){
 
 }
 
-httpServer.listen(3000);
+httpServer.listen(3000,"192.168.137.232");
