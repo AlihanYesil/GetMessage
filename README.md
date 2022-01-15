@@ -31,7 +31,7 @@ yeni terminal açıyoruz.
 
 GetMessage/getmessage  klasörüne giriyoruz.
 
-getmessage uygulamanın döndüğü yerdir . javascript in Vue.js  framework ile yazılmıştır.
+getmessage uygulamanın döndüğü yerdir(Client) . javascript in Vue.js  framework ile yazılmıştır.
 
 terminal ekranına gelip şunları yazıyoruz:
 
