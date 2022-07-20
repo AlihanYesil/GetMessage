@@ -8,7 +8,7 @@ indirdikten sonra GetMessage-main dosyasını masaüstüne sürükle bırak yap�
 
 
 
-##GetMessage/data  klasörüne giriyoruz.
+## GetMessage/data  klasörüne giriyoruz.
 
 data uygulamanın apisidir bu api php nin framework olan laravel ile yazılmıştır.
 
@@ -29,7 +29,7 @@ php artisan serve --port 80 yazıp laravel projemizi başlatıyoruz.(80 portunda
 yeni terminal açıyoruz.
 
 
-##GetMessage/getmessage  klasörüne giriyoruz.
+## GetMessage/getmessage  klasörüne giriyoruz.
 
 getmessage uygulamanın döndüğü yerdir(Client) . javascript in Vue.js  framework ile yazılmıştır.
 
