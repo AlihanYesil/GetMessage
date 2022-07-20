@@ -2,13 +2,13 @@
 
 
 
-uygulamayı kullana bilmeniz için verileri tutacağımız bir DB niz olması gerekir.
+uygulamayı kullanabilmekniz için verileri tutacağımız bir DB niz olması gerekir.
 
 indirdikten sonra GetMessage-main dosyasını masaüstüne sürükle bırak yapıyoruz ve kullandığınız IDE ile açın.
 
 
 
-GetMessage/data  klasörüne giriyoruz.
+##GetMessage/data  klasörüne giriyoruz.
 
 data uygulamanın apisidir bu api php nin framework olan laravel ile yazılmıştır.
 
@@ -29,7 +29,7 @@ php artisan serve --port 80 yazıp laravel projemizi başlatıyoruz.(80 portunda
 yeni terminal açıyoruz.
 
 
-GetMessage/getmessage  klasörüne giriyoruz.
+##GetMessage/getmessage  klasörüne giriyoruz.
 
 getmessage uygulamanın döndüğü yerdir(Client) . javascript in Vue.js  framework ile yazılmıştır.
 
@@ -42,7 +42,7 @@ npm run serve yazarak çalıştıyoruz.
 vue js hazırdır.yeni terminal açıyoruz.
 
 
-GetMessage/server  klasörüne giriyoruz.
+##GetMessage/server  klasörüne giriyoruz.
 
 server uygulamanın anlık haberleşme sağlaması için gerekli bir uygulamadır  . Node.js in WebSocket framework ile yazılmıştır.
 
@@ -56,7 +56,7 @@ npm start yazarak nodemon ile başlatabiliriz. yada node server yazıp normal ba
 
 Nodemon nedir: Nodemon, NodeJS tabanlı uygulama geliştirirken dosyalarınızdaki değişiklikleri algılayıp otomatik olarak sunucuyu sizin için baştan başlatan bir araçtır.
 
-ve artık uygulama hazır kullanabilirsiniz iyi eğlenceler.
+###  artık uygulama hazır kullanabilirsiniz iyi eğlenceler.
 
 
 
